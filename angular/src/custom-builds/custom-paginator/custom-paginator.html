@@ -1,0 +1,32 @@
+<pagination-template [maxSize]="maxSize"
+                     (pageChange)="pageChange.emit($event)">
+    <nav>
+        <ul class="pagination"
+            role="navigation">
+
+            <li>
+                <button type="button" class="btn btn-outline-primary">
+                    <mat-icon>
+                        chevron_left
+                    </mat-icon>
+                </button>
+            </li>
+
+            <li
+                *ngFor="let page of pageList">
+                <button type="button" class="btn btn-outline-primary" (click)="callKenobi()">
+                    {{ page.value }}
+                </button>
+            </li>
+
+            <li>
+                <button type="button" class="btn btn-outline-primary">
+                    <mat-icon>
+                        chevron_right
+                    </mat-icon>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+</pagination-template>

@@ -1,0 +1,112 @@
+<div class="col col-sm-11 col-md-11 col-lg-11">
+    <h1 mat-dialog-title *ngIf="_data.activityId != null">{{ "EditActivity" | localize }}</h1>
+    <h1 mat-dialog-title *ngIf="_data.activityId == null">{{ "AddActivity" | localize }}</h1>
+</div>
+<div class="col col-sm-1 col-md-1 col-lg-1">
+    <mat-icon style="cursor: pointer" (click)="close(false)">cancel</mat-icon>
+</div>
+<div class="col col-sm-12 col-md-12 col-lg-12">
+    <mat-tab-group mat-stretch-tabs>
+        <mat-tab [label]="'GeneralInformation' | localize">
+            <form autocomplete="off" #editCreateActivityModal="ngForm" [formGroup]="createEditActivityFormGroup" (ngSubmit)="save()">
+                <br />
+                <div class="col col-sm-12 col-md-12 col-lg-12">
+                    <mat-form-field>
+                        <input matInput
+                               name="Name"
+                               [placeholder]="'Name' | localize"
+                               [(ngModel)]="activity.name"
+                               formControlName="name"
+                               required />
+                    </mat-form-field>
+                </div>
+                <div class="col col-sm-2 col-md-2 col-lg-2">
+                    <mat-form-field>
+                        <input matInput
+                               type="number"
+                               name="StartingMonth"
+                               [placeholder]="'StartingMonth' | localize"
+                               [(ngModel)]="activity.startingMonth"
+                               formControlName="startingMonth" />
+                    </mat-form-field>
+                </div>
+                <div class="col col-sm-2 col-md-2 col-lg-2">
+                    <mat-form-field>
+                        <input matInput
+                               type="number"
+                               name="EndingMonth"
+                               [placeholder]="'EndingMonth' | localize"
+                               [(ngModel)]="activity.endingMonth"
+                               formControlName="endingMonth" />
+                    </mat-form-field>
+                </div>
+                <div class="col col-sm-12 col-md-12 col-lg-12">
+                    <mat-form-field>
+                        <textarea matInput
+                                  name="Description"
+                                  [placeholder]="'Description' | localize"
+                                  [(ngModel)]="activity.description"
+                                  formControlName="description"
+                                  rows="10"></textarea>
+                    </mat-form-field>
+                </div>
+            </form>
+        </mat-tab>
+        <mat-tab [label]="'Expenses' | localize" [disabled]="_data.activityId == null">
+            <form>
+                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <mat-form-field>
+                        <input matInput
+                               [placeholder]="l('SearchByType')"
+                               [(ngModel)]="expenseSelectBoxFilter"
+                               name="expenseSelectBoxFilter"
+                               (ngModelChange)="filterExpenseName()">
+                    </mat-form-field>
+                </div>
+            </form>
+            <table class="table table-hover table-striped" [busy]="isTableLoading">
+                <thead>
+                    <tr>
+                        <th width="90%">{{ "ExpenseType" | localize }}</th>
+                        <th width="10%">{{ "Actions" | localize }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor=" let expense of expenseListFiltered">
+                        <td>{{ expense.type.name | localize }}</td>
+                        <td>
+                            <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">
+                                <mat-icon>menu</mat-icon>
+                            </button>
+                            <mat-menu #actionsMenu="matMenu">
+                                <button mat-menu-item (click)="createEditDialog(activity.endingMonth, _data.activityId, expense.id)">
+                                    <mat-icon>edit</mat-icon>
+                                    <span>{{ "Edit" | localize }}</span>
+                                </button>
+                                <button mat-menu-item (click)="delete(expense.id)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{ "Delete" | localize }}</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button mat-mini-fab color="primary" class="pull-right" (click)="createEditDialog(activity.endingMonth, _data.activityId)">
+                <mat-icon>add</mat-icon>
+            </button>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+<div class="col col-sm-12 col-md-12 col-lg-12">
+    <div mat-dialog-actions align="end">
+        <button mat-flat-button
+                type="submit"
+                (click)="save()"
+                flex="15"
+                color="primary"
+                [disabled]="!editCreateActivityModal.form.valid || saving">
+            {{ "Save" | localize }}
+        </button>
+    </div>
+</div>

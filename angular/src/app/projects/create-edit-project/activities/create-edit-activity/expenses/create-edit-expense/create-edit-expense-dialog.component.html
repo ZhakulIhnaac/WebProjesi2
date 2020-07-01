@@ -1,0 +1,79 @@
+<div class="col col-sm-11 col-md-11 col-lg-11">
+    <h1 mat-dialog-title *ngIf="_data.expenseId != null">{{ "EditExpense" | localize }}</h1>
+    <h1 mat-dialog-title *ngIf="_data.expenseId == null">{{ "AddExpense" | localize }}</h1>
+</div>
+<div class="col col-sm-1 col-md-1 col-lg-1">
+    <mat-icon style="cursor: pointer" (click)="close(false)">cancel</mat-icon>
+</div>
+<div class="col col-sm-12 col-md-12 col-lg-12">
+    <br />
+    <form autocomplete="off" #editCreateExpenseModal="ngForm" [formGroup]="createEditExpenseFormGroup" (ngSubmit)="save()">
+        <div class="col col-sm-3 col-md-3 col-lg-3">
+            <mat-form-field>
+                <mat-select [placeholder]="l('ExpenseType')"
+                            name="ExpenseType"
+                            formControlName="typeId"
+                            [(ngModel)]="expense.typeId">
+                    <mat-optgroup *ngFor="let expenseTypeGroup of expenseTypeGroupList"
+                                  [label]="expenseTypeGroup.parent.name | localize "
+                                  [disabled]="expenseTypeGroup.disabled">
+                        <mat-option *ngFor="let childExpenseGroup of expenseTypeGroup.childList"
+                                    [value]="childExpenseGroup.id">
+                            {{ childExpenseGroup.name | localize }}
+                        </mat-option>
+                    </mat-optgroup>
+                    <mat-option *ngFor="let expenseType of expenseTypeList" [value]="expenseType.id">{{ expenseType.name | localize }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col col-sm-3 col-md-3 col-lg-3">
+            <mat-form-field>
+                <input matInput
+                       name="Budget"
+                       [placeholder]="'Budget' | localize"
+                       [(ngModel)]="expense.budget"
+                       formControlName="budget" />
+            </mat-form-field>
+        </div>
+        <div class="col col-sm-3 col-md-3 col-lg-3">
+            <mat-form-field>
+                <input matInput
+                       name="Number"
+                       [placeholder]="'Number' | localize"
+                       [(ngModel)]="expense.number"
+                       formControlName="number" />
+            </mat-form-field>
+        </div>
+        <div class="col col-sm-3 col-md-3 col-lg-3">
+            <mat-form-field>
+                <mat-select [placeholder]="l('Currency')"
+                            name="Currency"
+                            formControlName="currency"
+                            [(ngModel)]="expense.currencyTypeId">
+                    <mat-option *ngFor="let currency of currencyList" [value]="currency.id">{{ currency.currencyCode }} : {{ currency.currencyName }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col col-sm-12 col-md-12 col-lg-12">
+            <mat-form-field>
+                <input matInput
+                       name="Description"
+                       [placeholder]="'Description' | localize"
+                       [(ngModel)]="expense.name"
+                       formControlName="name" />
+            </mat-form-field>
+        </div>
+    </form>
+</div>
+<div class="col col-sm-12 col-md-12 col-lg-12">
+    <div mat-dialog-actions align="end">
+        <button mat-flat-button
+                type="submit"
+                (click)="save()"
+                flex="15"
+                color="primary"
+                [disabled]="!editCreateExpenseModal.form.valid || saving">
+            {{ "Save" | localize }}
+        </button>
+    </div>
+</div>

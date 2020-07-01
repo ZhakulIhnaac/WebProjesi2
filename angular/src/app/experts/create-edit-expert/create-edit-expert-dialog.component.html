@@ -1,0 +1,166 @@
+<div class="col col-sm-11 col-md-11 col-lg-11">
+    <h1 mat-dialog-title *ngIf="_data.expertId != null">{{ "EditExpert" | localize }}</h1>
+    <h1 mat-dialog-title *ngIf="_data.expertId == null">{{ "AddExpert" | localize }}</h1>
+</div>
+<div class="col col-sm-1 col-md-1 col-lg-1">
+    <mat-icon style="cursor: pointer" (click)="close(false)">cancel</mat-icon>
+</div>
+<div class="col col-sm-12 col-md-12 col-lg-12">
+    <mat-tab-group>
+        <mat-tab [label]="'GeneralInformation' | localize">
+            <form autocomplete="off" #editExpertModal="ngForm" [formGroup]="createEditExpertFormGroup" (ngSubmit)="save()">
+                <mat-dialog-content>
+                    <br />
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col col-sm-6 col-md-6 col-lg-6">
+                                <mat-form-field>
+                                    <input matInput
+                                           name="Name"
+                                           [placeholder]="'Name' | localize"
+                                           [(ngModel)]="expert.name"
+                                           formControlName = "name"
+                                           required />
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <input matInput
+                                           name="Title"
+                                           [placeholder]="'Title' | localize"
+                                           [(ngModel)]="expert.title"
+                                           formControlName = "title" />
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-select [placeholder]="l('Nationality')"
+                                                [(ngModel)]="expert.nationalityId"
+                                                name="Nationality"
+                                                formControlName="country"
+                                                required>
+                                        <mat-option [disabled]="true">
+                                            <input matInput
+                                                   name="countrySelectBoxFilter"
+                                                   [(ngModel)]="countrySelectBoxFilter"
+                                                   [placeholder]="l('Search')"
+                                                   (ngModelChange)="filterCountry()"
+                                                   [ngModelOptions]="{standalone: true}" />
+                                        </mat-option>
+                                        <mat-option *ngFor="let country of countryListFiltered" [value]="country.id">{{ country.countryName }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col col-sm-6 col-md-6 col-lg-6">
+                                <mat-form-field>
+                                    <input matInput
+                                           name="Surname"
+                                           [placeholder]="'Surname' | localize"
+                                           [(ngModel)]="expert.surname"
+                                           formControlName = "surname"
+                                           required />
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-select [placeholder]="l('Sex')"
+                                                [(ngModel)]="expert.sex"
+                                                name="sex"
+                                                formControlName = "sex"
+                                                required>
+                                        <mat-option value="Male">{{ 'Male' | localize }}</mat-option>
+                                        <mat-option value="Female">{{ 'Female' | localize }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </mat-dialog-content>
+            </form>
+        </mat-tab>
+        <mat-tab [label]="'ExpertChannel' | localize">
+            <h6 *ngIf="expertChannelList.length == 0" style="align-self: center">{{ "NoExpertChannelInfoExists" | localize }}</h6>
+            <table *ngIf="expertChannelList.length != 0" class="table table-hover table-striped" [busy]="isTableLoading">
+                <thead>
+                    <tr>
+                        <th width="70%">{{ "ChannelContext" | localize }}</th>
+                        <th width="20%">{{ "ChannelType" | localize }}</th>
+                        <th width="10%">{{ "Actions" | localize }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor=" let expertChannel of expertChannelList">
+                        <td>{{ expertChannel.channelContext }}</td>
+                        <td>{{ expertChannel.channelType.channelName }}</td>
+                        <td>
+                            <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">
+                                <mat-icon>menu</mat-icon>
+                            </button>
+                            <mat-menu #actionsMenu="matMenu">
+                                <button mat-menu-item (click)="createEditDialog(_data.expertId, expertChannel.id)">
+                                    <mat-icon>edit</mat-icon>
+                                    <span>{{ "Edit" | localize }}</span>
+                                </button>
+                                <button mat-menu-item (click)="delete(expertChannel.id)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{ "Delete" | localize }}</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button mat-mini-fab color="primary" class="pull-right" (click)="createEditDialog(_data.expertId)">
+                <mat-icon>add</mat-icon>
+            </button>
+        </mat-tab>
+        <mat-tab [label]="'Experiences' | localize">
+            <h6 *ngIf="expertExperienceList.length == 0" style="align-self: center">{{ "NoExpertExperienceInfoExists" | localize }}</h6>
+            <table *ngIf="expertExperienceList.length != 0" class="table table-hover table-striped" [busy]="isTableLoading">
+                <thead>
+                    <tr>
+                        <th width="90%">{{ "TenderName" | localize }}</th>
+                        <th width="10%">{{ "Actions" | localize }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor=" let expertExperience of expertExperienceList">
+                        <td>{{ expertExperience.tender.title }}</td>
+                        <td>
+                            <button class="action-button" mat-icon-button [matMenuTriggerFor]="actionsMenu">
+                                <mat-icon>menu</mat-icon>
+                            </button>
+                            <mat-menu #actionsMenu="matMenu">
+                                <button mat-menu-item (click)="createEditDialog(expertExperience)">
+                                    <mat-icon>edit</mat-icon>
+                                    <span>{{ "Edit" | localize }}</span>
+                                </button>
+                                <button mat-menu-item (click)="delete(expertNote)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{ "Delete" | localize }}</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-tab>
+        <mat-tab [label]="'WorkingAreas' | localize">
+            <br />
+            <div class="row-fluid">
+                <ng-template ngFor let-area [ngForOf]="workingAreaList">
+                    <div class="col-sm-4">
+                        <div class="checkbox-wrapper">
+                            <mat-checkbox (change)="addRemoveArea(area.id, $event)">
+                                {{ area.areaName }}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+    <div mat-dialog-actions align="end">
+        <button mat-flat-button
+                type="submit"
+                flex="15"
+                color="primary"
+                [disabled]="!editExpertModal.form.valid || saving">
+            {{ "Save" | localize }}
+        </button>
+    </div>
+</div>

@@ -1,0 +1,252 @@
+<div class="col col-sm-11 col-md-11 col-lg-11">
+    <h1 mat-dialog-title>{{ _data.projectName }}</h1>
+</div>
+<div class="col col-sm-1 col-md-1 col-lg-1">
+    <mat-icon style="cursor: pointer" (click)="close(false)">cancel</mat-icon>
+</div>
+<div class="col col-sm-12 col-md-12 col-lg-12">
+    <mat-tab-group mat-stretch-tabs>
+        <mat-tab [label]="'Planned' | localize">
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'TotalExpensesByMonth' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="plannedMonthlyExpenseBarChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="plannedMonthlyExpenseBarChartDataset"
+                            [labels]="plannedMonthlyExpenseBarChartLabel"
+                            [options]="defaultBarChartOptions"
+                            [colors]="defaultBarChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultBarChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'TotalCumulativeExpensesByMonth' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="plannedMonthlyCumulativeExpenseBarChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="plannedMonthlyCumulativeExpenseBarChartDataset"
+                            [labels]="plannedMonthlyCumulativeExpenseBarChartLabel"
+                            [options]="defaultLineChartOptions"
+                            [colors]="defaultLineChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultLineChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'ExpensesByActivity' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="plannedExpensesByActivityChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="plannedExpensesByActivityChartDataset"
+                            [labels]="plannedExpensesByActivityChartLabel"
+                            [options]="defaultHorizontalBarChartOptions"
+                            [colors]="defaultHorizontalBarChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultHorizontalBarChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'ExpensesByType' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="plannedExpensesByTypeChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="plannedExpensesByTypeChartDataset"
+                            [labels]="plannedExpensesByTypeChartLabel"
+                            [options]="defaultBarChartOptions"
+                            [colors]="defaultBarChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultBarChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-6 col-md-6 col-lg-6" *ngFor="let plannedExpenseParentType of plannedExpenseParentTypeList">
+                <br />
+                <h5 style="color:gray">{{ plannedExpenseParentType.parentType | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="plannedExpenseParentType.ready == true" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="plannedExpenseParentType.dataset"
+                            [labels]="plannedExpenseParentType.label"
+                            [options]="defaultDoughnutChartOptions"
+                            [colors]="defaultDoughnutChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultDoughnutChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab [label]="'Occured' | localize">
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'TotalExpensesByMonth' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="actualMonthlyExpenseBarChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="actualMonthlyExpenseBarChartDataset"
+                            [labels]="actualMonthlyExpenseBarChartLabel"
+                            [options]="defaultBarChartOptions"
+                            [colors]="defaultBarChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultBarChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'TotalCumulativeExpensesByMonth' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="actualMonthlyCumulativeExpenseBarChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="actualMonthlyCumulativeExpenseBarChartDataset"
+                            [labels]="actualMonthlyCumulativeExpenseBarChartLabel"
+                            [options]="defaultLineChartOptions"
+                            [colors]="defaultLineChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultLineChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'ExpensesByActivity' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="actualExpensesByActivityChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="actualExpensesByActivityChartDataset"
+                            [labels]="actualExpensesByActivityChartLabel"
+                            [options]="defaultHorizontalBarChartOptions"
+                            [colors]="defaultHorizontalBarChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultHorizontalBarChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <h5 style="color:gray">{{ 'ExpensesByType' | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="actualExpensesByTypeChartReady" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="actualExpensesByTypeChartDataset"
+                            [labels]="actualExpensesByTypeChartLabel"
+                            [options]="defaultBarChartOptions"
+                            [colors]="defaultBarChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultBarChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+            <div class="col col-sm-6 col-md-6 col-lg-6" *ngFor="let actualExpenseParentType of actualExpenseParentTypeList">
+                <br />
+                <h5 style="color:gray">{{ actualExpenseParentType.parentType | localize }}</h5>
+                <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+                <br />
+                <div *ngIf="actualExpenseParentType.ready == true" class="chart-wrapper">
+                    <canvas baseChart
+                            [datasets]="actualExpenseParentType.dataset"
+                            [labels]="actualExpenseParentType.label"
+                            [options]="defaultDoughnutChartOptions"
+                            [colors]="defaultDoughnutChartColors"
+                            [legend]="defaultChartLegend"
+                            [chartType]="defaultDoughnutChartType"
+                            [plugins]="defaultChartPlugins">
+                    </canvas>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab [label]="'Comparison' | localize">
+
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+
+
+<!--<div class="col col-sm-12 col-md-12 col-lg-12">
+    <br />
+    <br />
+    <h5 style="color:gray">{{ 'Activities' | localize }}</h5>
+    <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+    <br />
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let activity of activityList">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ activity.activity.name }}
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{ 'Total' | localize }} : {{ activity.activityTotalCost }}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <table class="table table-hover table-striped" [busy]="isTableLoading">
+                <thead>
+                    <tr>
+                        <th>{{ "ExpenseName" | localize }}</th>
+                        <th>{{ "ExpenseType" | localize }}</th>
+                        <th>{{ "UnitPrice" | localize }}</th>
+                        <th>{{ "Amount" | localize }}</th>
+                        <th>{{ "TotalPrice" | localize }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let expense of activity.expenseList">
+                        <td>{{ expense.name }}</td>
+                        <td>{{ expense.type.name | localize }}</td>
+                        <td>{{ expense.budget | number  }}</td>
+                        <td>{{ expense.number }}</td>
+                        <td>Total: {{ expense.number * expense.budget | number }} {{ expense.currencyType.currencyCode }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<div class="col col-sm-12 col-md-12 col-lg-12">
+    <br />
+    <br />
+    <h5 style="color:gray">{{ 'MonthlyCostsOfExpenseTypes' | localize }}</h5>
+    <hr style="height:5px; color:gray; margin-top:5px!important; margin-bottom:5px!important" />
+    <br />
+    <table class="table table-hover table-striped" [busy]="isTableLoading">
+        <thead>
+            <tr>
+                <th>{{ "ExpenseType" | localize }} ({{ 'Planned' | localize }} / {{ 'Actual' | localize }})</th>
+                <th *ngFor=" let month of monthsList">{{ month }}</th>
+                <th>{{ "Total" | localize }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor=" let expenseType of expenseTypeMonthlyCostList">
+                <td>{{ expenseType.expenseType | localize }}</td>
+                <td *ngFor=" let monthlyCost of expenseType.monthlyCostList">{{ monthlyCost.planned | number }} / {{ monthlyCost.actual | number }}</td>
+                <td>{{ expenseType.expenseTypePlannedTotalCost | number  }} / {{ expenseType.expenseTypeActualTotalCost | number  }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>-->
